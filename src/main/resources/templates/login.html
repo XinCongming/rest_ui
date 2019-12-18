@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<table class="table">       
+    <tr>           
+        <td>用户名</td>
+        <td><input type="text" id="username"></td>
+    </tr>
+    <tr>
+        <td>密码</td>
+        <td><input type="password" id="password"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <button id="btn">登录</button>
+            <button id="btn1">注册</button>
+            <button id="btn2">清空</button>
+        </td>
+    </tr>
+</table>
+   
+<script type="text/javascript">
+    $(function () {
+        $('#btn2').click(function () {
+            if(confirm("是否清空所有账户密码？")){
+            var url = 'user/clean'
+            $.get(url, function (data) {
+                if(data.success){
+                    alert("清空成功！")
+                }else {
+                    alert("清空失败！")
+                }
+            })
+            }
+        });
+        $('#btn').click(function () {
+            $.get('user/login?username=' + $('#username').val() + '&password=' + $('#password').val(), function (data) {
+                if (!data.success) {
+                    alert(data.message);
+                } else {
+                    window.location.href = "success.html?username=" + $('#username').val();
+                }
+            });
+        });
+        $('#btn1').click(function () {
+            var user = {
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: 'user/regist',
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(user),
+                success: function (data) {
+                    if (!data.success) {
+                        alert(data.message);
+                    } else {
+                        alert("注册成功！");
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
